@@ -21,12 +21,26 @@ app.get("/", function (req, res) {
 
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+  res.json({greeting: 'hello API1'});
 });
 
-
+app.get("/api/:date?", function(req, res) {
+  let date = req.params["date"];
+  if(date == null){
+    res.json({utc: (new Date()).toString()})
+  } else {
+    const ms = Date.parse(date);
+    if(isNaN(ms)){
+      res.json({error: "Invalid date"})
+    } else {
+      const unix = parseInt(ms?ms:req.params["date"]);
+      let date = new Date(unix);
+      res.json({unix: unix, utc: date.toString()})
+    }
+  }
+});
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
+var listener = app.listen(5000, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
